@@ -1,0 +1,106 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+
+\title{Computability Theory: Week 1}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercises: 2.5.4 (6), 2.5.9
+
+  \begin{theorem}[2.5.4 (6)]
+    Given a primitive recursive function $f$, there is a primitive recursive
+    function $s$ such that for all $\vec x, z$,
+    \begin{equation}
+      \label{eq:sum}
+      s(\vec x, y) = \sum_{y \le z} f(\vec x, y).
+    \end{equation}
+  \end{theorem}
+
+  \begin{proof}
+    Let
+    \begin{align*}
+      g(\vec x) &= f(\vec x, 0)\\
+      h(r, \vec x, n) &= r + f(\vec x, n+1)
+    \end{align*}
+    and let $s$ be defined from $g$ and $h$ by primitive recursion.
+
+    We prove \ref{eq:sum} by induction.
+
+    In the base case,
+    \[
+      s(\vec x, 0) = g(\vec x) = f(\vec x, 0) = \sum_{y \le 0} f(\vec x, y).
+    \]
+
+    Suppose now that
+    \[
+      s(\vec x, z) = \sum_{y \le z} f(\vec x, z)
+    \]
+    for some $z$.  Then
+    \begin{align*}
+      s(\vec x, z+1) &= h(s(\vec x, z), \vec x, z)\\
+      &= s(\vec x, z) + f(\vec x, z+1)\\
+      &= \sum_{y \le z} f(\vec x, y) + f(\vec x, z+1)\\
+      &= \sum_{y \le z+1} f(\vec x, y).
+    \end{align*}
+  \end{proof}
+
+  \begin{theorem}[2.5.9]
+    Given primitive recursive $g$ and $h$, there exists a primitive recursive
+    function $f$ such that
+    \begin{align*}
+      f(\vec x, 0) &= g(\vec x)\\
+      f(\vec x, n+1) &= h(\tuple{f(\vec x, 0), \ldots, f(\vec x, n)}, \vec x, n).
+    \end{align*}
+  \end{theorem}
+
+  \begin{proof}
+    Let
+    \begin{align*}
+      g_L(\vec x) &= \tuple{g(\vec x)}\\
+      h_L(r, \vec x, n) &= r \concat \tuple{h(r, \vec x, n)}.
+    \end{align*}
+    and define $f_L$ from $g_L$ and $h_L$ by primitive recursion. Let $f(\vec x, n) = (f_L(\vec x, n))_n$.
+
+    For the first equation, we have
+    \[
+      f(\vec x, 0) = (f_L(\vec x, 0))_0
+      = (g_L(\vec x))_0
+      = (\tuple{g(\vec x)})_0
+      = g(\vec x).
+    \]
+
+    For the second equation, we first show
+    \[
+      f_L(\vec x, n) = \tuple{f(\vec x, 0), \ldots, f(\vec x, n)}.
+    \]
+    We proceed by induction.  The base case holds by definition.
+    For the inductive case, note
+    \begin{align*}
+      f_L(\vec x, n+1)
+      &= f_L(\vec x, n) \concat \tuple{h(f_L(\vec x, n), \vec x, n)}\\
+      &= \tuple{f(\vec x, 0), \ldots, f(\vec x, n)} \concat \tuple{h(f_L(\vec x, n), \vec x, n)}\\
+      &= \tuple{f(\vec x, 0), \ldots, f(\vec x, n), h(f_L(\vec x, n), \vec x, n)}.
+    \end{align*}
+
+    Since $(f_L(\vec x, n+1))_{n+1} = f(\vec x, n+1)$ by definition, it follows that
+    \[
+      h(f_L(\vec x, n), \vec x, n) = f(\vec x, n+1).
+    \]
+
+    Now note
+    \[
+      f(\vec x, n+1) = h(f_L(\vec x, n), \vec x, n) = h(\tuple{f(\vec x, 0), \ldots, f(\vec x, n)}, \vec x, n)
+    \]
+    as required.
+  \end{proof}
+\end{document}
