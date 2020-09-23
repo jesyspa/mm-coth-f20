@@ -1,0 +1,99 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+% Thanks to https://tex.stackexchange.com/a/114222
+\def\dotminus{\mathbin{\ooalign{\hss\raise1ex\hbox{.}\hss\cr
+  \mathsurround=0pt$-$}}}
+
+\title{Computability Theory: Week 2}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercises: 2.5.15, 3.8.4
+
+  \begin{theorem}[2.5.15]
+    There exists a computable function $h$ that can be expressed as the sum of
+    two uncomputable functions.
+  \end{theorem}
+
+  \begin{proof}
+    Take any undecidable set, say $K$.  The characteristic functions $\chi_K$ and $\chi_{\bar K}$
+    are uncomputable, but $\chi_K(x) + \chi_{\bar K}(x) = 1$ for all $x$, and the constant functions
+    are computable.
+  \end{proof}
+
+  Note that this proof uses notions from chapter 3.  We can also prove this using only the notions
+  from chapter 2 by appealing to diagonalisation directly.
+
+  \begin{proof}
+    Define $f$ by
+    \[
+      f(x) =
+      \begin{cases}
+        1 & \text{if $\{x\}(x) = 0$}\\
+        0 & \text{otherwise.}
+      \end{cases}
+    \]
+
+    Suppose that $f$ is computable.  Then it has some code $e$ and we have $f(e) = 1$
+    iff $\{e\}(e) = f(e) = 0$, a contradiction.
+
+    Suppose that $g(x) = 1 \dotminus f(x)$ is computable, then we can define $f(x) = 1 \dotminus g(x)$,
+    again a contradiction since $f$ is not computable.
+
+    On the other hand, $f(x) + g(x) = 1$ for all $x$, and is thus computable.
+  \end{proof}
+
+  \begin{theorem}[3.8.4]
+    Given any two computably enumerable sets $A$ and $B$ there exist sets $\hat A \subseteq A$
+    and $\hat B \subseteq B$ such that $\hat A \cap \hat B = \emptyset$ and $\hat A \cup \hat B =
+    A \cup B$.
+  \end{theorem}
+
+  Proof sketch: we enumerate $A$ and $B$ in parallel, enumerating elements into $\hat A$ or $\hat B$
+  as they appear but skipping over any elements we have seen before.  If both sets produce the same
+  element at once, we place it in $\hat A$.  This gives us disjoint enumerations with the same union.
+
+  \begin{proof}
+    Since $A$ and $B$ are computably enumerable, we can regard them as being of the form
+    \begin{align*}
+      A = \bigcup_{s \in \omega} A_s && B = \bigcup_{s \in \omega} B_s
+    \end{align*}
+    where all $A_s$ and $B_s$ are decidable and $(A_s)_{s \in \omega}$ and $(B_s)_{s \in \omega}$ are
+    cumulative, in the sense that for all $s \le t$, $A_s \subseteq A_t$ and $B_s \subseteq B_t$.
+
+    Define now
+    \begin{align*}
+      \hat A_0 &= A_0\\
+      \hat A_{s+1} &= A_{s+1} - \hat B_s\\
+      \hat B_s &= B_s - \hat A_s.
+    \end{align*}
+
+    Note that by induction, each $\hat A_s$ and $\hat B_s$ is computable.  Let
+    \begin{align*}
+      \hat A = \bigcup_{s \in \omega} \hat A_s && \hat B = \bigcup_{s \in \omega} \hat B_s.
+    \end{align*}
+
+    We now show $\hat A \cup \hat B = A \cup B$ and $\hat A \cap \hat B = \emptyset$.
+
+    Since $\hat A_s \subseteq A_s \subseteq A$ and $\hat B_s \subseteq B_s \subseteq B$, it
+    follows that $\hat A \subseteq A$ and $\hat B \subseteq B$.  Since every $x \in A \cup B$ is enumerated into $\hat A_s$ or
+    $\hat B_s$ eventually, it follows that $A \cup B = \hat A \cup \hat B$.
+
+    Suppose now that $x \hat A \cap \hat B$. Note that
+    $(\hat A_s)_{s \in \omega}$ and $(\hat B_s)_{s \in \omega}$ are cumulative. 
+     Let $\hat A_s$, $\hat B_t$ be least such that
+    $x \in \hat A_s$ and $x \in \hat B_t$.  By the definition of $\hat B_t$,
+    $x \not \in \hat A_t$ and by cumulativity it follows that $t < s$.  However, it follows
+    then that $x \in B_{s-1}$ and thus $x \not \in A_s$, a contradiction.
+  \end{proof}
+\end{document}
