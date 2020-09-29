@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+
+\title{Computability Theory: Week A}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercises: 3.8.5
+
+  \begin{theorem}[3.8.5 (Proposition 3.2.6)]
+    A set $A$ is computable if and only if both $A$ ands its complement $\bar A$ are c.e.
+  \end{theorem}
+
+  \begin{proof}
+    Suppose $A$ is computable.  Then $A$ is c.e.\@and $\bar A$ is also computable, so $\bar A$ is also c.e.
+
+    Suppose $A$ and $\bar A$ are c.e. and let $e, d \in \mathbb{N}$ such that $A = W_e$ and $\bar A = W_d$.
+    Define
+    \begin{align*}
+      t(x) &= (\mu s)[x \in W_{e, s} \cup W_{d, s}]\\
+      g(x) &= \chi_{W_{e, t(x)}}(x).
+    \end{align*}
+
+    Note that $t$ and $g$ are total: for every $x$, since $x \in A$ or $x \in \bar A$, there is some $s$ such that
+    $x \in W_{e,s}$ or $x \in W_{d,s}$.  Thus $t$ is total and since $W_{e,s}$ is uniformly computable in
+    $s \in \mathbb{N}$, so is $g$.
+
+    Now suppose $x \in A$.  Since $x \not \in W_d$, $x \in W_{e,t(x)}$ and thus $g(x) = 1$.  On the other hand, suppose
+    $x \in \bar A$.  Since $x \not \in W_e$ and $W_{e, s} \subseteq W_e$ for all $s \in \mathbb{N}$, it follows that
+    $g(x) = 0$.  Thus $g = \chi_A$ and so $A$ is computable.
+  \end{proof}
+\end{document}
