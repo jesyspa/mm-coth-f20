@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+\newcommand{\set}[1]{\{ #1 \}}
+\newcommand{\compr}[2]{\{ #1 \,:\, #2 \}}
+\newcommand{\terminates}{\!\!\downarrow}
+\newcommand{\diverges}{\!\!\uparrow}
+
+\title{Computability Theory: Week 4}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercises: 3.8.11
+
+  \begin{theorem}[3.8.11]
+    There is a reduction $\bar K \le_m \compr{e}{W_e = \emptyset}$.
+  \end{theorem}
+
+  Recall that a proof of this consists of three components:
+  \begin{enumerate}
+    \item A unary computable function $f$.
+    \item A proof that for all $n \in \bar K$, $f(n) \in \compr{e}{W_e = \emptyset}$.  That is, for all $n$, if
+    $\phi_n(n)\diverges$ then $W_{f(n)} = \emptyset$.
+    \item A proof that for all $n \not \in \bar K$, $f(n) \not \in \compr{e}{W_e = \emptyset}$.  That is, for all $n$,
+      if $\phi_n(n)\terminates$ then $W_{f(n)} \neq \emptyset$.
+  \end{enumerate}
+
+  \begin{proof}
+    Define $f$ (using the S-m-n theorem) by
+    \[
+      \phi_{f(n)}(x) = \phi_n(n).
+    \]
+
+    Suppose $n \not \in K$.  Then $\phi_n(n)\diverges$ and thus $W_{f(n)} = \emptyset$.  On the other hand, if $n \in
+    K$, then $\phi_n(n)\terminates$, so $W_{f(n)} = \omega \neq \emptyset$.
+  \end{proof}
+\end{document}
