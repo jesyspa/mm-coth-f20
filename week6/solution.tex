@@ -1,0 +1,102 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+\newcommand{\set}[1]{\{ #1 \}}
+\newcommand{\compr}[2]{\{ #1 \,:\, #2 \}}
+\newcommand{\terminates}{\!\!\downarrow}
+\newcommand{\diverges}{\!\!\uparrow}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\Comp}{Comp}
+
+\title{Computability Theory: Week 6}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercises: 4.3.4 (1 \& 3)
+
+  Recall from Definition 3.3.2 (page 22):
+  \begin{align*}
+    \Fin &= \compr{e \in \mathbb{N}}{\text{$W_e$ is finite}}\\
+    \Comp &= \compr{e \in \mathbb{N}}{\text{$W_e$ is computable}}
+  \end{align*}
+
+  \begin{theorem}[4.3.4 (1)]
+    $\Fin \in \Sigma^0_2$.
+  \end{theorem}
+
+  \begin{proof}
+    Let $W_e$ be a c.e.\@ set.  Note that $e \in \Fin$ iff there exists some
+    $N \in \mathbb{N}$ such that for all $n > N$, $n \not \in W_e$.  We can capture this as
+    follows:
+    \[
+      e \in \Fin \iff \exists N\forall n\forall s.\, (n > N \implies n \not \in W_{e, s}).
+    \]
+
+    Note that $n > N \implies n \not \in W_{e, s}$ is computable and the two consecutive $\forall$
+    quantifiers can be combined using the coding of pairs.  We have thus shown that $e \in \Fin$ is equivalent
+    to a formula of the form $\exists x. \forall y. R(e, x, y)$ with $R$ computable, and hence $\Fin \in \Sigma^0_2$.
+  \end{proof}
+
+  \begin{theorem}[4.3.4 (3)]
+    $\Comp \in \Sigma^0_3$.
+  \end{theorem}
+
+  \begin{proof}
+    Let $W_e$ be a c.e.\@ set.  The set $W_e$ is computable iff its characteristic function $\chi$ is computable.  In
+    other words, $W_e$ is computable if there exists some computable function $f$ such that for all $n$,
+    \begin{align*}
+      f(n) = 0 &\iff n \not \in W_e\\
+      f(n) = 1 &\iff n \in W_e.
+    \end{align*}
+
+    Let $T$, $R_0$ and $R_1$ be the relations
+    \begin{align*}
+      T(d, n, k) &\iff \varphi_{d, k}(n)\terminates\\
+      R_0(e, d, n, s, k) &\iff (n \not \in W_{e, s} \implies (n \in W_{e, k} \vee \varphi_{d, k}(n) = 0))\\
+      R_1(e, d, n, s, k) &\iff (n \in W_{e, s} \implies \varphi_{d, k}(n) = 1)
+    \end{align*}
+
+    Note that each of these is computable and thus so is their conjunction.  Let us now show that
+    \[
+      e \in \Comp \iff \exists d\forall n\forall s\exists k.\, T(d, n, k) \wedge R_0(e, d, n, s, k) \wedge
+        R_1(e, d, n, s, k).
+    \]
+
+    Suppose $e \in \Comp$ and let $d$ be the code of $\chi_{W_e}$.  Let $n, s \in \mathbb{N}$.  Select $k$ such that
+    $\varphi_{d, k}(n)\terminates$ and such that if $n \in W_e$ then $n \in W_{e, k}$.  By our choice of $k$, $T(d, n, k)$
+    holds.  We need to show that $R_0(e, d, n, s, k)$ and $R_1(e, d, n, s, k)$ hold.  We will abbreviate these to $R_0$
+    and $R_1$ respectively.
+
+    Suppose $n \not \in W_e$.  Then $R_1$ holds trivially, since $n \not \in W_{e, s}$.  $R_0$ holds as well, since
+    $\varphi_{d, k}(n) = \chi_{W_e}(n) = 0$.
+
+    Suppose $n \in W_e$.  In any case, $R_0$ holds since $n \in W_{e, k}$ and $R_1$ holds since $\varphi_{d, k}(n) =
+    \chi_{W_e}(n) = 1$.
+
+    Let us now show the converse.  Suppose there exists a $d$ such that for all $n$ and $s$, there is some $k$ such that
+    $T(d, n, k)$, $R_0(e, d, n, s, k)$, and $R_1(e, d, n, s, k)$.  We show that $\varphi_d = \chi_{W_e}$.
+
+    Let $n \in \mathbb{N}$.  Let $s$ be such that $n \in W_{e, s}$, or $0$ if no such $s$ exists.  Let $k$ be such that
+    $T(d, n, k)$, $R_0(e, d, n, s, k)$, and $R_1(e, d, n, s, k)$ hold; we again abbreviate these to $T$, $R_0$, and
+    $R_1$.
+
+    Since $T$ holds, $\varphi_{d, k}(n)\terminates$.  We need to show that $\varphi_{d, k}(n) = \chi_{W_e}(n)$.
+
+    Suppose $n \in W_e$, then by our choice of $s$, $n \in W_{e, s}$ and thus by $R_1$, $\varphi_{d, k}(n) = 1 = \chi_{W_e}(n)$.
+
+    On the other hand, suppose $n \not \in W_e$.  It follows that $n \not \in W_{e, s}$ and $n \not \in W_{e, k}$, so by
+    $R_0$ we have $\varphi_{d, k}(n) = 0 = \chi_{W_e}(n)$.
+
+    It follows that $\varphi_d = \chi_{W_e}$ and thus $e \in \Comp$ can be expressed with a $\Sigma^0_3$ formula.
+  \end{proof}
+\end{document}
