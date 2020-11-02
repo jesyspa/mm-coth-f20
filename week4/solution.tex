@@ -30,18 +30,18 @@
   \begin{enumerate}
     \item A unary computable function $f$.
     \item A proof that for all $n \in \bar K$, $f(n) \in \compr{e}{W_e = \emptyset}$.  That is, for all $n$, if
-    $\phi_n(n)\diverges$ then $W_{f(n)} = \emptyset$.
+    $\varphi_n(n)\diverges$ then $W_{f(n)} = \emptyset$.
     \item A proof that for all $n \not \in \bar K$, $f(n) \not \in \compr{e}{W_e = \emptyset}$.  That is, for all $n$,
-      if $\phi_n(n)\terminates$ then $W_{f(n)} \neq \emptyset$.
+      if $\varphi_n(n)\terminates$ then $W_{f(n)} \neq \emptyset$.
   \end{enumerate}
 
   \begin{proof}
     Define $f$ (using the S-m-n theorem) by
     \[
-      \phi_{f(n)}(x) = \phi_n(n).
+      \varphi_{f(n)}(x) = \varphi_n(n).
     \]
 
-    Suppose $n \not \in K$.  Then $\phi_n(n)\diverges$ and thus $W_{f(n)} = \emptyset$.  On the other hand, if $n \in
-    K$, then $\phi_n(n)\terminates$, so $W_{f(n)} = \omega \neq \emptyset$.
+    Suppose $n \not \in K$.  Then $\varphi_n(n)\diverges$ and thus $W_{f(n)} = \emptyset$.  On the other hand, if $n \in
+    K$, then $\varphi_n(n)\terminates$, so $W_{f(n)} = \omega \neq \emptyset$.
   \end{proof}
 \end{document}

@@ -29,14 +29,14 @@
   \begin{proof}
     Using the S-m-n theorem define $f$ by
     \[
-      \phi_{f(x)}(y) =
+      \varphi_{f(x)}(y) =
       \begin{cases}
         0 & \text{if $y = x$}\\
         \uparrow & \text{otherwise}
       \end{cases}.
     \]
 
-    By the recursion theorem, there is an $e \in \mathbb{N}$ such that $\phi_{f(e)} = \phi_e$.
+    By the recursion theorem, there is an $e \in \mathbb{N}$ such that $\varphi_{f(e)} = \varphi_e$.
     This $e$ satisfies the condition of the theorem, since
     \[
       y \in W_e \iff y \in W_{f(e)} \iff y = e.
@@ -44,12 +44,12 @@
   \end{proof}
 
   \begin{theorem}[3.8.15 (ii)]
-    There is an $e$ such that for every $x$, $\phi_e(x)\terminates \iff \phi_{2e}(x)\terminates$.
+    There is an $e$ such that for every $x$, $\varphi_e(x)\terminates \iff \varphi_{2e}(x)\terminates$.
   \end{theorem}
 
   \begin{proof}
     Since $x \mapsto 2x$ is a computable function, by the recursion theorem, there is an
-    $e \in \mathbb{N}$ such that $\phi_{2e} = \phi_e$.
+    $e \in \mathbb{N}$ such that $\varphi_{2e} = \varphi_e$.
   \end{proof}
 
   \begin{theorem}[3.8.15 (iii)]
@@ -58,7 +58,7 @@
 
   \begin{proof}
     By exercise 2.5.16 there is a computable function $f$ such that $W_{f(n)} = D_n$.  By the
-    recursion theorem, there is an $e \in \mathbb{N}$ such that $\phi_{f(e)} = \phi_e$.
+    recursion theorem, there is an $e \in \mathbb{N}$ such that $\varphi_{f(e)} = \varphi_e$.
     This $e$ satisfies the condition of the theorem, since
     \[
       W_e = W_{f(e)} = D_e.
