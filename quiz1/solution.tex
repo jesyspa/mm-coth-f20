@@ -1,0 +1,202 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{question}[theorem]{Question}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+\newcommand{\set}[1]{\{ #1 \}}
+\newcommand{\compr}[2]{\{ #1 \,:\, #2 \}}
+\newcommand{\terminates}{\!\!\downarrow}
+\newcommand{\diverges}{\!\!\uparrow}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\Tot}{Tot}
+\DeclareMathOperator{\Comp}{Comp}
+\DeclareMathOperator{\dom}{dom}
+
+\title{Computability Theory: November Quiz}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  \section{Recursive Functions}
+
+  Consider the following functions:
+  \begin{itemize}
+    \item $\alpha(n) = s$ where $s$ is minimal such that $\varphi_{n,
+      s}(n)\terminates$ if such $s$ exists, $\alpha(n)\diverges$ otherwise.
+    \item $\beta(n) = 0$ if $\varphi_n$ is total, $\beta(n)\diverges$ otherwise.
+    \item $\gamma(n, k)$ is the result of applying the $n$-th primitive
+      recursive function to $k$.
+    \item $\delta(n) = 0$ if $n$ is prime, $\delta(n) = 1$ otherwise.
+    \item $\epsilon(n) = 0$ if $n$ is prime, $\epsilon(n)\diverges$ otherwise.
+  \end{itemize}
+
+  \begin{question}
+    Which of the above are primitive recursive?
+  \end{question}
+
+  \noindent\emph{Answer:} Only $\delta$ is primitive recursive.
+
+  \noindent\emph{Explanation:} Note that $\alpha$, $\beta$, and $\epsilon$ are partial.  Since primitive recursive functions
+  are always total, this leaves only $\gamma$ and $\delta$.
+
+  Suppose $\gamma$ was primitive recursive.  Define $f(n) = \gamma(n, n)+1$.  Since $f$ is a composition of primitive
+  recursive functions, it is itself primitive recursive.  Suppose it is the $k$-th primitive recusive function.  Then
+  $\gamma(k, k) = f(k) = \gamma(k, k) + 1$, a contradiction.
+
+  To see $\delta$ is primitive recursive, note that the relation ``$k$ divides $n$'' is primitive recursive (check all
+  $i < n$ for $ki = n$).  Now we can use primitive recursion to check whether for all $1 < i < n$, $i$ divides $n$.
+
+  \begin{question}
+    Which of the above are recursive?
+  \end{question}
+
+  \noindent\emph{Answer:} $\gamma$ and $\delta$ are recursive.
+
+  \noindent\emph{Explanation:} Again, only $\delta$ and $\gamma$ are total, so we can disregard the others.  Since $\delta$ is
+  primitive recursive it is also recursive, so we are only interested in the status of $\gamma$.
+
+  The numbering of primitive recursive functions we will use is as follows.  Let the $n$-th primitive recursive function
+  be the one represented by the $n$-th valid code of a partial recursive function that does not use $\mu$-recursion.
+  Now we can evaluate primitive recursive functions the same way as we evaluate partial recursive functions
+  (c.f.\@ Theorem~2.4.1).  Since primitive recursive functions are always total, this evaluation function is total as
+  well and thus $\gamma$ is total.
+
+  \begin{question}
+    Which of the above are partial recursive?
+  \end{question}
+
+  \noindent\emph{Answer:} All except $\beta$ are partial recursive.
+
+  \noindent\emph{Explanation:} Since $\gamma$ and $\delta$ are recursive they are also partial recursive.  It is also easy to
+  define $\epsilon$ from $\delta$ by case analysis.
+
+  To see $\alpha$ is partial recursive, consider the following algorithm: for every $s$ (starting at zero and working
+  upwards) check whether $\varphi_{n, s}(n)$ halts and if it does, return $s$.  Since checking whether $\varphi_{n,
+  s}(n)$ halts is computable, this will produce the correct result if such an $s$ does exist.  If no such $s$ exists,
+  the computation will not terminate, as required.
+
+  To see $\beta$ is not partial recursive, we can note that this is an enumeration of the index set $\Tot$ of total
+  functions.  By Proposition~4.2.2, $\Tot$ is $m$-complete for $\Pi_2$ and is thus not c.e., since otherwise the
+  arithmetical hierarchy would collapse (which, by Theorem~4.1.4, it doesn't).
+
+  However, we can also show this directly.  Suppose that $\beta$ is partial recursive.  Define the following two
+  functions
+  \begin{align*}
+    \varphi_{f(n)}(x) &= \varphi_n(n)\\
+    \varphi_{g(n)}(x) &=
+    \begin{cases}
+      0& \text{if $\varphi_{n,x}(n)\diverges$}\\
+      \uparrow& \text{if $\varphi_{n,x}(n)\terminates$}
+    \end{cases}.
+  \end{align*}
+
+  Since (by assumption) $\beta$ is partial recursive, $\dom \beta$ is c.e.\@ and thus we can decide $n \in K$: if $n \in
+  K$ then $f(n) \in \dom \beta$, while if $n \not \in K$ then $g(n) \in \dom \beta$.
+
+  \section{Computable Sets}
+
+  Consider the following sets:
+  \begin{itemize}
+    \item $A = \compr{n \in \mathbb{N}}{W_n = \emptyset}$.
+    \item $B = \compr{n \in \mathbb{N}}{\varphi_{n,n}(n)\terminates}$.
+    \item $C = \compr{n \in \mathbb{N}}{\text{$\text{P} = \text{NP}$ has a proof of length at most $n$}}$.
+    \item $D = \compr{n \in \mathbb{N}}{\text{$W_n$ is finite}}$.
+    \item $E = \compr{n \in \mathbb{N}}{W_n \neq \emptyset}$.
+  \end{itemize}
+
+  \begin{question}
+    Which of the above are computable?
+  \end{question}
+
+  \noindent\emph{Answer:} $B$ and $C$ are computable.
+
+  \noindent\emph{Explanation:} Note that $A$, $D$, and $E$ are all index sets which are not computable by Rice's Theorem.
+
+  To see $B$ is computable, recall from Definition~2.4.4 that $\varphi_{n,n}(n)$ is defined as $\varphi_n(n)$ if
+  there exists a $y < n$ such that $T_1(n, n, y)$ holds, and is undefined otherwise.  $T_1$ is primitive recursive
+  and thus computable, and a bounded quantification of a computable predicate is again computable.
+
+  To see $C$ is computable, consider two cases.  If there is no proof of $\text{P} = \text{NP}$, then $C$ is empty and
+  thus certainly computable.  On the other hand, suppose the shortest proof of $\text{P} = \text{NP}$ has length $N$.
+  Then $C = \compr{n \in \mathbb{N}}{n \ge N}$ which is cofinite and thus computable.
+
+  \begin{question}
+    Which of the above are computably enumerable?
+  \end{question}
+
+  \noindent\emph{Answer:} $B$, $C$, and $E$ are computably enumerable.
+
+  \noindent\emph{Explanation:} By the above, $B$ and $C$ are computable and thus also computably enumerable.
+
+  To see $E$ is computably enumerable, define
+  \[
+    \psi(e) =
+    \begin{cases}
+      0& \text{if $\exists n, s. n \in W_{e, s}$}\\
+      \uparrow& \text{otherwise}
+    \end{cases}.
+  \]
+  We see $\psi$ is partial computable and $E = \dom \psi$, and hence c.e.\@ by Theorem~3.2.3.
+
+  To see $A$ is not c.e., note that $A$ is the complement of $E$ and $E$ is c.e.\@ but not computable.  The complement
+  of a non-computable c.e.\@ set is not c.e.\@ (Theorem~3.2.6).
+
+  To see $D$ is not c.e., note that this is $\Fin$, which is $m$-complete for $\Sigma^0_2$.  To prove this directly,
+  suppose $D$ is in fact c.e.\@ and define $f$ and $g$ as in the proof that $\beta$ is not partial recursive above.
+  If $n \in K$ then $f(n) \in \Fin$, otherwise $g(n) \in \Fin$.
+
+  \section{Proofs}
+
+  \begin{question}
+    Show that there is an $e$ such that $\varphi_e(n) = en$ for all $n$.
+  \end{question}
+
+  \noindent\emph{Solution:} Using the $S$-$m$-$n$ theorem, define
+  \[
+    \varphi_{f(k)}(n) = kn.
+  \]
+
+  By the Recursion theorem there exists an $e$ such that $\varphi_e = \varphi_{f(e)}$ and thus for every $n \in
+  \mathbb{N}$,
+  \[
+    \varphi_e(n) = \varphi_{f(e)}(n) = en.
+  \]
+
+  \begin{question}
+    Give a many-one reduction from $K$ to $\Tot$.
+  \end{question}
+
+  \noindent\emph{Solution:} Define
+  \[
+    \varphi_{f(n)}(x) = \varphi_n(n).
+  \]
+
+  By definition, $n \in K$ iff $\varphi_n(n)\terminates$, and thus $n \in K$ iff $f(n)$ is the code of a total function,
+  as required.
+
+  \begin{question}
+    Let $\psi$ be a partial computable function.  Show that there is a computable
+    $f$ such that for all $n$, if $\psi(n)\terminates$ then $\varphi_{\psi(n)}
+    = \varphi_{f(n)}$.
+  \end{question}
+
+  \noindent\emph{Solution:} Define
+  \[
+    \delta(n, x) = \varphi_{\psi(n)}(x)
+  \]
+  and let $e$ be the code of $\delta$.  By the $S$-$m$-$n$ theorem there is a primitive recursive function $S^1_1$
+  such that for all $n, x \in \mathbb{N}$,
+  \[
+    \varphi_{S^1_1(e, n)}(x) = \varphi_e(n, x) = \delta(n, x) = \varphi_{\psi(n)}(x).
+  \]
+
+  Now $f(n) = S^1_1(e, n)$ satisfies the requirements of the question.
+\end{document}
