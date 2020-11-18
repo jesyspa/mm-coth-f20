@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+\newcommand{\set}[1]{\{ #1 \}}
+\newcommand{\compr}[2]{\{ #1 \,:\, #2 \}}
+\newcommand{\terminates}{\!\!\downarrow}
+\newcommand{\diverges}{\!\!\uparrow}
+\newcommand{\njump}{\emptyset^{(n)}}
+\newcommand{\njumpprime}{\emptyset^{(n)^\prime}}
+\newcommand{\snjump}{\emptyset^{(n+1)}}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\Comp}{Comp}
+
+\title{Computability Theory: Week 9}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercise: 5.6.4
+
+  \begin{theorem}
+    For all $n \ge 1$, $\njump \equiv_m K_n$.
+  \end{theorem}
+
+  By Proposition~4.1.5, $K_n$ is $m$-complete for $\Sigma^0_n$.  It therefore suffices to show that $\njump$ is
+  also $m$-complete for $\Sigma^0_n$.  This fact is already remarked on in the proof of Proposition~5.2.1; let us make
+  explicit how the relativization is done.
+
+  \begin{lemma}[Relativization of Proposition~3.5.3]
+    For all sets $A, B$, $A \in \Sigma^{0, B}_1$ iff $A \le_m B'$.
+  \end{lemma}
+
+  \begin{proof}
+    Suppose $A \in \Sigma^{0, B}_1$.  There is some $R$ such that $x \in A$ iff $(\exists y) R(x, y)$.  Define $f$
+    $B$-computable such that
+    \[
+      \varphi_{f(x)}(z) =
+      \begin{cases}
+        0 & \text{if $(\exists y) R(x, y)$}\\
+        \uparrow & \text{otherwise}
+      \end{cases}
+    .\]
+
+    Now $x \in A$ iff $\varphi^B_{f(x)}(f(x))\terminates \iff f(x) \in B'$, hence $A \le_m B'$.
+
+    On the other hand, suppose $x \in A$ iff $f(x) \in B'$ for some computable $f$.  Let
+    \[
+      B_s' = \compr{x}{\varphi^B_{x, s}(x)\terminates}.
+    \]
+
+    Note that $B_s'$ is $B$-computable.  Now $A = \compr{x}{(\exists s)(f(x) \in B_s')}$, and hence $A \in \Sigma^{0, B}_1$.
+  \end{proof}
+
+  \begin{lemma}
+    For all $n$, $\snjump$ is $m$-complete for $\Sigma^{0, \njump}_1$.
+  \end{lemma}
+
+  \begin{proof}
+    First, note that $\snjump \in \Sigma^{0, \njump}_1$ since $\snjump = \njumpprime$ and thus $\snjump \le_m
+    \njumpprime$, which sufficies by the lemma.  Now let $A \in \Sigma^{0, \njump}_1$; by Lemma~2, $A \le_m \njumpprime$,
+    which is exactly what we set out to show.
+  \end{proof}
+
+  \begin{lemma}
+    For all $n$, $\Sigma^{0, \njump}_1 = \Sigma^0_{(n+1)}$.
+  \end{lemma}
+
+  \begin{proof}
+    This is exactly Proposition~5.2.1 (iii).
+  \end{proof}
+
+  \begin{proof}[Of Theorem~1]
+    Since both $\njump$ and $K_n$ are $m$-complete for $\Sigma^0_n$, they are $m$-equivalent.
+  \end{proof}
+
+\end{document}
