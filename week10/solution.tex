@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+\newcommand{\set}[1]{\{ #1 \}}
+\newcommand{\compr}[2]{\{ #1 \,:\, #2 \}}
+\newcommand{\terminates}{\!\!\downarrow}
+\newcommand{\diverges}{\!\!\uparrow}
+\newcommand{\njump}{\emptyset^{(n)}}
+\newcommand{\njumpprime}{\emptyset^{(n)^\prime}}
+\newcommand{\snjump}{\emptyset^{(n+1)}}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\Comp}{Comp}
+
+\title{Computability Theory: Week 10}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercise: 5.6.10
+
+  \begin{theorem}
+    If a c.e.\@ set $A$ satisfies
+    \begin{equation}
+      (\exists^\infty s)[\set{e}^{A_s}_s(e)\terminates] \implies \set{e}^A(e)\terminates
+    \end{equation}
+    then $A$ is low.
+  \end{theorem}
+
+  Recall that $A$ being low means that $A' \le_T \emptyset'$, and that the enumeration $A_s$ exists since $A$ is c.e.:
+  take $e$ such that $W_e = A$ and set $A_s = W_{e, s}$.
+
+  \begin{proof}
+    Let $A$ be a c.e.\@ set satisfying (1).  By Proposition~5.3.2, it suffices to show that $A'$ is limit computable.
+    Define
+    \[
+      g(e, s) =
+      \begin{cases}
+        1 & \text{if $\set{e}^{A_s}_s(e)\terminates$}\\
+        0 & \text{otherwise}
+      \end{cases}.
+    \]
+
+    Note that $g$ is computable.  We will now show that for every $e$, the limit $\lim_{s \to \infty} g(e, s)$ exists
+    and is equal to $\chi_{A'}(e)$.
+
+    Suppose $e \in A'$.  Then the computation $\set{e}^A(e)$ has some use $u$, and there is some stage $t$ after which
+    the first $u$ bits of $A$ no longer change.  It follows that for all $s > t$, $\set{e}^{A_s}_s(e)\terminates$ and
+    thus $s \mapsto g(e, s)$ is constant above $t$.  The limit thus exists and is 1, as required.
+
+    Suppose on the other hand $e \not \in A'$.  By (1), it follows that $\set{e}^{A_s}(e)\terminates$ happens only for
+    finitely many $s$.  There is thus some $t$ such that for all $s > t$, $\set{e}^{A_s}_s(e)\diverges$ and thus
+    $\lim_{s \to \infty} g(e, s) = 0$.
+  \end{proof}
+\end{document}
