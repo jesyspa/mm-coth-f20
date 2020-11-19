@@ -52,9 +52,10 @@
     Note that $g$ is computable.  We will now show that for every $e$, the limit $\lim_{s \to \infty} g(e, s)$ exists
     and is equal to $\chi_{A'}(e)$.
 
-    Suppose $e \in A'$.  Then the computation $\set{e}^A(e)$ has some use $u$, and there is some stage $t$ after which
-    the first $u$ bits of $A$ no longer change.  It follows that for all $s > t$, $\set{e}^{A_s}_s(e)\terminates$ and
-    thus $s \mapsto g(e, s)$ is constant above $t$.  The limit thus exists and is 1, as required.
+    Suppose $e \in A'$.  Then the computation $\set{e}^A(e)$ terminates and has some use $u$.  If $A_s$ and $A$ agree on
+    the first $u$ bits, then $\set{e}^{A_s}_s(e)\terminates$.  There is some stage $t$ at which all elements of $A$
+    below $u$ are in $A_t$.  For all $s > t$, $A_s$ and $A$ agree on the first $u$ bits, so $\set{e}^{A_s}_s(e)\terminates$
+    and thus $s \mapsto g(e, s)$ is constant above $t$.  The limit thus exists and is 1, as required.
 
     Suppose on the other hand $e \not \in A'$.  By (1), it follows that $\set{e}^{A_s}(e)\terminates$ happens only for
     finitely many $s$.  There is thus some $t$ such that for all $s > t$, $\set{e}^{A_s}_s(e)\diverges$ and thus
