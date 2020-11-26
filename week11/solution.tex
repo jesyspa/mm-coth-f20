@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+\newcommand{\set}[1]{\{ #1 \}}
+\newcommand{\compr}[2]{\{ #1 \,:\, #2 \}}
+\newcommand{\terminates}{\!\!\downarrow}
+\newcommand{\diverges}{\!\!\uparrow}
+\newcommand{\njump}{\emptyset^{(n)}}
+\newcommand{\njumpprime}{\emptyset^{(n)^\prime}}
+\newcommand{\snjump}{\emptyset^{(n+1)}}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\Tot}{Tot}
+\DeclareMathOperator{\Comp}{Comp}
+\DeclareMathOperator{\dom}{dom}
+
+\title{Computability Theory: Week 11}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercise: 7.4.1
+
+  Let ``$e \in \Tot$'' abbreviate the formula $\forall x \exists s. \, \set{e}_s(x)\terminates$.  Let $\mathcal{F}$ be a
+  sound formal system in the language of arithmetic.
+
+  \begin{theorem}
+    There exists an $e \in \Tot$ such that $\mathcal{F} \not\vdash e \in \Tot$.
+  \end{theorem}
+
+  \begin{proof}
+    Suppose on the contrary that for all $e \in \Tot$, $\mathcal{F}$ proves $e \in \Tot$.  Since $\mathcal{F}$ is a
+    c.e.\@ set of codes of formulas and we can find the code of ``$e \in \Tot$'' uniformly in $e$, we can define a
+    partial computable function $\psi$ as
+    \[
+      \psi(e) =
+      \begin{cases}
+        0 & \text{if $\mathcal{F} \vdash e \in \Tot$}\\
+        \uparrow & \text{otherwise}
+      \end{cases}.
+    \]
+
+    If $\psi(e)\terminates$ then $\mathcal{F} \vdash e \in \Tot$ and thus, by soundness of $\mathcal{F}$, $e \in \Tot$.
+    On the other hand, if $e \in \Tot$ then by assumption $\mathcal{F} \vdash e \in \Tot$, and thus
+    $\psi(e)\terminates$.
+
+    It follows that $\dom(\psi) = \Tot$ and thus $\Tot$ is c.e., which contradicts Proposition~4.2.2, where we saw that
+    $\Tot$ is $m$-complete for $\Pi_2$.
+  \end{proof}
+
+  Let us also consider the following proof (Exercise~7.4.2).
+
+  \begin{proof}[Of Theorem~1]
+    Let $f$ be an enumeration of $\mathcal{F}$.  Using the $S$-$m$-$n$ theorem, define
+    \[
+      \set{e}(x) =
+      \begin{cases}
+        \uparrow & \text{if for some $y < x$, $f(y)$ is the code of $e \in \Tot$}\\
+        0 & \text{otherwise}
+      \end{cases}.
+    \]
+
+    Note that $\set{e}$ is in fact total: suppose on the contrary that for some $x$, $\set{e}(x)\diverges$, then
+    $\mathcal{F} \vdash e \in \Tot$ and by soundness we get that $e \in \Tot$.  Together with our assumption that
+    $e \not \in \Tot$, this gives us a contradiction, from which we can conclude that $e \in \Tot$ after
+    all.\footnote{This somewhat strange line of reasoning is known as \emph{Pierce's law}.}
+
+    Since $\set{e}$ is total, it follows that for every $y$, $f(y)$ is unequal to the code of ``$e \in \Tot$''.  Since
+    we took $f$ to be an enumeration of $\mathcal{F}$, it follows that $\mathcal{F} \not \vdash e \in \Tot$, as
+    required.
+  \end{proof}
+
+  During the last tutorial session, the question came up of whether showing that $\mathcal{F}$ can decide any $\Pi_2$
+  statement is enough to derive a contradiction.\footnote{Here, by `decide' we mean that for every $\Pi_2$ statement $\phi$,
+  either $\mathcal{F} \vdash \phi$ or $\mathcal{F} \vdash \neg \phi$.}  This is indeed the case.
+
+  \begin{theorem}
+    There is some $\Pi_2$ statement $\phi$ such that $\mathcal{F} \not \vdash
+    \phi$ and $\mathcal{F} \not \vdash \neg \phi$.
+  \end{theorem}
+
+  \begin{proof}
+    Note that by soundness, it suffices to find some $\phi$ such that $\phi$ is true but $\mathcal{F} \not
+    \vdash \phi$.  By Theorem~1 there is some $e \in \Tot$ such that $\mathcal{F} \not \vdash e \in \Tot$.  Since
+    ``$e \in \Tot$'' is $\Pi_2$, this is exactly what we were looking for.
+  \end{proof}
+\end{document}
