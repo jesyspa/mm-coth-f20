@@ -1,0 +1,96 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+\newcommand{\set}[1]{\{ #1 \}}
+\newcommand{\compr}[2]{\{ #1 \,:\, #2 \}}
+\newcommand{\terminates}{\!\!\downarrow}
+\newcommand{\diverges}{\!\!\uparrow}
+\newcommand{\njump}{\emptyset^{(n)}}
+\newcommand{\njumpprime}{\emptyset^{(n)^\prime}}
+\newcommand{\snjump}{\emptyset^{(n+1)}}
+\newcommand{\PiOne}{\Pi^0_1}
+\newcommand{\Cons}{\widehat{\,\,}}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\Tot}{Tot}
+\DeclareMathOperator{\Comp}{Comp}
+\DeclareMathOperator{\dom}{dom}
+
+\title{Computability Theory: Week 12}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercises: 1.10 \& 1.11 from the supplement.
+
+  \begin{theorem}
+    If $\mathcal{A}$ is a $\PiOne$-class and $X \in \mathcal{A}$ is isolated, then $X$ is computable.
+  \end{theorem}
+
+  \begin{proof}
+    Let $T$ be a computable tree such that $\mathcal{A} = [T]$ and let $X \in \mathcal{A}$ be isolated.  Since $X$ is
+    isolated, the set $\set{X}$ is open and thus there is some $\sigma$ such that $[\sigma] = \set{X}$.
+
+    We inductively construct a sequence of initial segments of $X$.  Let $\sigma_0 = \sigma$.  Now given $\sigma_n$,
+    exactly one of $\sigma_n \Cons 0$ and $\sigma_n \Cons 1$ has an infinite number of extensions on $T$.  We can decide
+    which one it is by enumerating these in parallel, since the other will eventually run out of extensions.  Set
+    $\sigma_{n+1} = \sigma_n \Cons i$, where $\sigma_n \Cons i$ has an infinite number of extensions.
+
+    We can now decide whether $n \in X$ by finding an $m$ such that $|\sigma_m| > n$; since $\sigma_m$ is an initial
+    segment of $X$, $n \in X$ iff $\sigma_m(n) = 1$.
+  \end{proof}
+
+  \begin{theorem}
+    Every non-empty $\PiOne$-class $\mathcal{A}$ has a member of c.e.\@ degree.
+  \end{theorem}
+
+  Recall that a set $X$ is of c.e.\@ degree if there is a c.e.\@ set $Y$ such that $X \equiv_T Y$.  This theorem thus
+  does not imply that the $\Sigma^0_1$ sets form a basis for $\Pi^0_1$ classes (and this is in fact not the case).
+
+  To prove this theorem, we will use the lexicographical ordering.  For $\tau, \sigma \in 2^n$ we say $\tau < \sigma$ if
+  there exists some $k < n$ such that $\tau(k) < \sigma(k)$ and for all $i < k$, $\tau(i) = \sigma(i)$.  For paths, we
+  say $X < Y$ if there exist initial segments $\sigma \sqsubseteq X$ and $\tau \sqsubseteq Y$ such that $\sigma < \tau$.
+  Finally, for a string $\sigma$ and a path $X$ we say $\sigma < X$ if there exists a $\tau \sqsubseteq X$ such that
+  $\sigma < \tau$.
+
+  \begin{lemma}
+    Every non-empty $\PiOne$-class $\mathcal{A}$ has a minimal path with respect to the lexicographical ordering.
+  \end{lemma}
+
+  \begin{proof}
+    Let $T$ be a computable tree such that $\mathcal{A} = [T]$.  At every level $n$, there are only finitely many
+    strings, and so there is a lexicographically least string $\sigma_n$ that can be extended to an infinite path.
+
+    For every $n$, at least one of $\sigma_n \Cons 0$ and $\sigma_n \Cons 1$ can be extended to an infinite path.  For
+    any $\tau < \sigma_n$, neither $\tau \Cons 0$ not $\tau \Cons 1$ can be extended to an infinite path, hence
+    $\sigma_{n+1}$ is an extension of $\sigma_n$.  There is now a unique path $X$ such that every $\sigma_n$ is an
+    initial segment of $X$.
+  \end{proof}
+
+  \begin{proof}[Proof of Theorem 2]
+    Let $T$ be a computable tree such that $\mathcal{A} = [T]$.  By the lemma, there is a least path $X$ in
+    $\mathcal{A}$ with respect to the lexicographical ordering defined above.
+
+    Let $S = \compr{\sigma \in 2^{<\omega}}{\sigma < X}$.  We claim that $S$ is c.e.\@ and $S \equiv_T X$.
+
+    Let $\psi(\sigma)$ be the function that halts if for every $\tau \le \sigma$ there are finitely many extensions of
+    $\tau$ in $T$, and does not halt otherwise.  This can be done by enumerating all such extensions.  Suppose $\sigma <
+    X$, then there are indeed finitely many such extensions (since otherwise there would be a path $Y < X$ through $T$),
+    and thus $\sigma \in \dom(\psi)$.  On the other hand, if $\sigma \not < X$ then there is some initial segment $\tau$
+    of $X$ such that $\tau \le \sigma$.  This $\tau$ extends to an infinite path in $T$ and thus $\sigma \not \in
+    \dom(\psi)$.  This shows $S$ is the domain of a partial computable function and is thus computably enumerable.
+
+    We now show $S \equiv_T X$.  Given an oracle $X$, we can decide whether $\sigma \in S$ by taking an initial
+    segment $\tau$ of $X$ such that $|\sigma| = |\tau|$ and checking if $\sigma < \tau$.  On the other hand, given an
+    oracle $S$ we can compute $n \in X$ by finding the lexicographically least $(n+1)$-bit element $\sigma$ such that
+    $\sigma \not \in S$; now $n \in X$ iff $\sigma(n) = 1$.
+  \end{proof}
+\end{document}
