@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+\newcommand{\set}[1]{\{ #1 \}}
+\newcommand{\compr}[2]{\{ #1 \,:\, #2 \}}
+\newcommand{\terminates}{\!\!\downarrow}
+\newcommand{\diverges}{\!\!\uparrow}
+\newcommand{\njump}{\emptyset^{(n)}}
+\newcommand{\njumpprime}{\emptyset^{(n)^\prime}}
+\newcommand{\snjump}{\emptyset^{(n+1)}}
+\newcommand{\PiOne}{\Pi^0_1}
+\newcommand{\Cons}{\widehat{\,\,}}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\Tot}{Tot}
+\DeclareMathOperator{\Comp}{Comp}
+\DeclareMathOperator{\dom}{dom}
+
+\title{Computability Theory: Week 13}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercise: 7.4.5.
+
+  \begin{theorem}
+    For any $k$, the set of $k$-random strings is $\Pi^0_1$.
+  \end{theorem}
+
+  \begin{proof}
+    Fix $k$.  Recall that a string $\sigma$ is $k$-random if \[ C(\sigma) = \min\compr{|\tau|}{U(\tau) = \sigma} \ge
+    |\sigma| - k. \]
+
+    Negating the condition, a string is non-$k$-random if there exists a $\tau$ such that $U(\tau) =
+    \sigma$ and $|\tau| < |\sigma| - k$.
+
+    Note now that given $\sigma$, if there is such a $\tau$ then we can find it: compute all $U(\tau)$ in parallel and
+    halt if you find one that satisfies the requirements.  It follows that the set of non-$k$-random strings is
+    $\Sigma^0_1$, and its complement is therefore $\Pi^0_1$
+  \end{proof}
+\end{document}
