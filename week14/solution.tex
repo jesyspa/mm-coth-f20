@@ -1,0 +1,94 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\tuple}[1]{\langle #1 \rangle}
+\newcommand{\concat}{\mathbin{\widehat{}}}
+\newcommand{\set}[1]{\{ #1 \}}
+\newcommand{\compr}[2]{\{ #1 \,:\, #2 \}}
+\newcommand{\terminates}{\!\!\downarrow}
+\newcommand{\diverges}{\!\!\uparrow}
+\newcommand{\njump}{\emptyset^{(n)}}
+\newcommand{\njumpprime}{\emptyset^{(n)^\prime}}
+\newcommand{\snjump}{\emptyset^{(n+1)}}
+\newcommand{\PiOne}{\Pi^0_1}
+\newcommand{\Cons}{\widehat{\,\,}}
+\DeclareMathOperator{\Fin}{Fin}
+\DeclareMathOperator{\Tot}{Tot}
+\DeclareMathOperator{\Comp}{Comp}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\use}{use}
+
+\title{Computability Theory: Week 14}
+\author{Anton Golov (agolov@science.ru.nl)}
+\begin{document}
+  \maketitle
+
+  Exercise: 6.3.2.
+
+  \begin{theorem}
+    There exists a low simple set $A$.
+  \end{theorem}
+
+  \begin{proof}
+    We build the set $A$ using a finite injury construction.  We have the following requirements:
+    \begin{align*}
+      R_e &= \text{$W_e$ infinite} \implies A \cap W_e \neq \emptyset\\
+      L_e &= \exists^\infty s.\, \set{e}^{A_s}_s(e)\terminates \implies \set{e}^A(e)\terminates.
+    \end{align*}
+
+    The $R_e$ requirements ensure that $A$ is simple, while the $L_e$ requirements ensure $A$ is low.  The priority
+    ordering on these requirements is
+    \[
+      R_0 > L_0 > R_1 > L_1 > \cdots
+    \]
+
+    Throughout the construction, a restraint function $r(e, s)$ that will ensure that we do not injure higher priority
+    requirements.  If at stage $s+1$ we do not specify an action for $r(e, s+1)$ we mean that the value from the
+    previous stage should be maintained, that is, that that we set $r(e, s+1) = r(e,s)$.
+
+    We say that a requirement $R_e$ requires attention at stage $s+1$ if $W_{e,s} \cap A_s = \emptyset$ and there is an
+    $x \in W_{e,s}$ such that $\forall d < e$, $r(d, s) < x$ and $2e < x$.  We say a requirement $L_e$ requires
+    attention at stage $s+1$ if $\set{e}^{A_s}_s(e)\terminates$ and $r(e, s) < \use(\set{e}^{A_s}_s(e))$.
+
+    The construction proceeds as follows.
+
+    Stage $s = 0$: Set $A_0 = \emptyset$ and set $r(e, 0) = 0$ for all $e$.  We leave the witnesses $n_e$ undefined for
+    now.
+
+    Stage $s+1$: Let $d < s$ be minimal such that $R_d$ or $L_d$ requires attention.  If no such $i$ exists, do nothing
+    and proceed to the next stage.
+
+    If $R_d$ requires attention, then there is some $x \in W_{e,s}$ such that for all $d < e$, $r(d, s) < x$ and $2e <
+    x$.  Enumerate $x$ into $A$.
+
+    If, instead, $L_d$ requires attention, then set $r(d, s+1) = \use(\set{d}^{A_s}_s(d))$.  This computation converges
+    since $L_d$ requires attention.  This concludes the construction.
+
+    We verify that the requirements are satisfied.  Let $e$ be such that $W_e$ is infinite.  By induction, there is some
+    stage $s$ such that all requirements with priority higher than $R_e$ will not act again.  Since $W_e$ is infinite,
+    there is some least stage $s'$ and $x \in W_{e,s'}$ such that for all $d < e$, $r(d, s) < x$.  It follows that $R_e$
+    will eventually require attention and thus $A \cap W_e \neq \emptyset$ since $x$ will be enumerated into $A$.
+
+    Now let $e$ be such that $\exists^\infty s.\, \set{e}^{A_s}_s(e)\terminates$.  Again, by induction let $s$ be a
+    stage such that all higher priority requirements than $L_e$ will not act after $s$.  At some stage $s' > s$,
+    $\set{e}^{A_{s'}}_{s'}(e)\terminates$ with use $u$ and thus $L_e$ acts and $r(c, s'+1)$ is set to $u$.  Since the
+    restraint functions are non-decreasing in the second parameter, no value below $u$ will be enumerated into $A$ from
+    stage $s'$ onwards and so $\set{e}^{A}(e)\terminates$.
+
+    Note that every $R_e$ requirements acts at most once, since once an element of $W_{e,s}$ is enumerated into $A$, for
+    all $s' > s$ we have $W_{e,s'} \cap A_{s'} \neq \emptyset$.  Every $L_e$ requirement acts at most once after it is
+    injured by a higher priority requirement; by induction, every $L_e$ acts at most finitely often.
+
+    By Exercise~5.6.10 it follows that $A$ is low.  Note that $\bar{A}$ is infinite: every requirement $R_e$ enumerates
+    at most one value into $A$, and this value is above $2e$, while the requirements $L_e$ do not enumerate anything
+    into $A$.  It follows that $|\compr{x \in A}{x \le 2e}| \le e$.  Finally, note that for every infinite c.e.\@ set
+    $W_e$, since $W_e \cap A \neq \emptyset$, $W_e$ is not a subset of $\bar{A}$ and thus $A$ is simple.
+  \end{proof}
+\end{document}
