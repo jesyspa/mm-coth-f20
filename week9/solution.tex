@@ -40,10 +40,10 @@
   \end{lemma}
 
   \begin{proof}
-    Suppose $A \in \Sigma^{0, B}_1$.  There is some $R$ such that $x \in A$ iff $(\exists y) R(x, y)$.  Define $f$
-    $B$-computable such that
+    Suppose $A \in \Sigma^{0, B}_1$.  There is some $B$-computable $R$ such that $x \in A$ iff $(\exists y) R(x, y)$.
+    Using the relativized $S$-$m$-$n$ theorem, find a primitive recurisve $f$ such that
     \[
-      \varphi_{f(x)}(z) =
+      \varphi^B_{f(x)}(z) =
       \begin{cases}
         0 & \text{if $(\exists y) R(x, y)$}\\
         \uparrow & \text{otherwise}
